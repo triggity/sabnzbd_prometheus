@@ -51,6 +51,6 @@ func main() {
 
 	http.Handle("/metrics", promhttp.Handler())
 
-	fmt.Printf("starting server, listening at %s\n", *addr)
+	log.Printf("starting server, listening at %s\n", *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }

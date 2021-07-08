@@ -1,7 +1,6 @@
 package sabnzbd_prometheus
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 	"time"
@@ -108,10 +107,9 @@ func (s *SabNzbdCollector) Describe(c chan<- *prometheus.Desc) {
 }
 
 func (s *SabNzbdCollector) Collect(c chan<- prometheus.Metric) {
-	fmt.Println("collecting Metrics")
 	statsResponse, err := s.client.GetServerStats()
 	if err != nil {
-		fmt.Printf("error retrieving SabNzbd server stats: %e\n", err)
+		log.Printf("error retrieving SabNzbd server stats: %e\n", err)
 		return
 	}
 	// Overall server metrics
@@ -131,7 +129,7 @@ func (s *SabNzbdCollector) Collect(c chan<- prometheus.Metric) {
 
 	queueResponse, err := s.client.GetQueue()
 	if err != nil {
-		fmt.Printf("error retrieving SabNzbd queue stats: %e\n", err)
+		log.Printf("error retrieving SabNzbd queue stats: %e\n", err)
 		return
 	}
 	queue := queueResponse.Queue
@@ -171,5 +169,5 @@ func (s *SabNzbdCollector) Collect(c chan<- prometheus.Metric) {
 }
 
 func printParseFloatError(key string, value string, err error) {
-	fmt.Printf("error converting `%s` value %s to time; %e\n", key, value, err)
+	log.Printf("error converting `%s` value %s to time; %e\n", key, value, err)
 }
