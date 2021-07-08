@@ -45,7 +45,7 @@ func main() {
 		log.Fatalf("Must provide `-sabnzbd-apiKey` flag or %s environment variable\n", *sabApiKey)
 	}
 
-	fmt.Printf("setting up sabnzbd client at %s\n", *sabUri)
+	log.Printf("setting up sabnzbd client at %s\n", *sabUri)
 	collector := sabnzbd_prometheus.NewSabNzbdCollector(*sabUri, *sabApiKey)
 	prometheus.MustRegister(collector)
 

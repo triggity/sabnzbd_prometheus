@@ -2,6 +2,7 @@ package sabnzbd_prometheus
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -89,7 +90,12 @@ func NewSabNzbdCollector(baseUri string, apiKey string) *SabNzbdCollector {
 
 }
 func (s *SabNzbdCollector) Describe(c chan<- *prometheus.Desc) {
-	fmt.Println("descriving")
+	// TODO: add s.speedLimitPercentage and s.speedLimitAbsolute
+	descriptors := []*prometheus.Desc{s.downloadedOverallMetric, s.downloadedServerMetric, s.queueSizeMetric, s.queueBytesPerSecondMetric, s.queueRemainingBytes, s.queueTotalSizeBytes, s.queueRemainingTimeSeconds}
+	for _, desc := range descriptors {
+		log.Printf("Registering descriptor: %s\n", desc.String())
+		c <- desc
+	}
 	c <- s.downloadedOverallMetric
 	c <- s.downloadedServerMetric
 	c <- s.queueSizeMetric
@@ -102,7 +108,7 @@ func (s *SabNzbdCollector) Describe(c chan<- *prometheus.Desc) {
 }
 
 func (s *SabNzbdCollector) Collect(c chan<- prometheus.Metric) {
-	fmt.Println("collecting")
+	fmt.Println("collecting Metrics")
 	statsResponse, err := s.client.GetServerStats()
 	if err != nil {
 		fmt.Printf("error retrieving SabNzbd server stats: %e\n", err)
